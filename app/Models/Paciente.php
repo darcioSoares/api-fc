@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cidade extends Model
+class Paciente extends Model
 {
     use HasFactory;
 
+    protected $table = 'pacientes';
+
     protected $fillable = [
         'nome',
-        'estado',
+        'cpf',
+        'celular',
     ];
-
-    public function medicos()
-    {
-        return $this->hasMany(Medico::class);
-    }
 
     public function consultas()
     {

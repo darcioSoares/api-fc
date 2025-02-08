@@ -19,4 +19,9 @@ class Medico extends Model
     {
         return $this->belongsTo(Cidade::class);
     }
+
+    public function consultas()
+    {
+        return $this->hasMany(Consulta::class);
+    }
 }
