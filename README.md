@@ -1,66 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API Teste Facil Consulta
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descrição
+Esta API permite gerenciar consultas, médicos, pacientes e cidades de forma eficiente e segura.
+O sistema segue uma arquitetura modular, separando as responsabilidades da seguinte forma:
 
-## About Laravel
+- **Controllers**: Responsáveis por validar os dados da requisição e chamar os serviços correspondentes.
+- **Services**: Contêm a lógica de negócio, garantindo que todas as regras sejam aplicadas corretamente.
+- **Repositories**: Responsáveis pela interação direta com o banco de dados, garantindo consultas eficientes e reutilizáveis.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Arquitetura e Padrões
+A API foi desenvolvida seguindo as melhores práticas:
+- **Separation of Concerns**: Controllers, Services e Repositories bem definidos.
+- **Validação de dados**: Feita diretamente nos controllers antes de chamar os serviços.
+- **Regras de Negócio**: Encapsuladas nos services para manter o código modular e reutilizável.
+- **Consultas eficientes**: Delegadas para os repositórios, garantindo desempenho otimizado.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Essa estrutura torna a API mais escalável, organizada e de fácil manutenção.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+As rotas protegidas utilizam autenticação via **token Bearer**.
 
-## Learning Laravel
+## Endpoints
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Autenticação
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+#### Criar uma conta
+**POST** `/register`
+```json
+{
+  "nome": "João Silva",
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Fazer login
+**POST** `/login`
+```json
+{
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
 
-## Laravel Sponsors
+#### Fazer logout (Requer autenticação)
+**POST** `/logout`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### Obter usuário autenticado (Requer autenticação)
+**GET** `/user`
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 2. Médicos
 
-## Contributing
+#### Listar todos os médicos
+**GET** `/medicos`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Criar um médico (Requer autenticação)
+**POST** `/medicos`
+```json
+{
+  "nome": "Dr. Carlos Souza",
+  "especialidade": "Cardiologia",
+  "cidade_id": 1
+}
+```
 
-## Code of Conduct
+#### Listar médicos por cidade
+**GET** `/cidades/{id_cidade}/medicos`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Listar pacientes de um médico (Requer autenticação)
+**GET** `/medicos/{id_medico}/pacientes`
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Pacientes
 
-## License
+#### Adicionar um paciente (Requer autenticação)
+**POST** `/pacientes`
+```json
+{
+  "nome": "Ana Maria",
+  "cpf": "123.456.789-00",
+  "celular": "(11) 98765-4321"
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Atualizar dados de um paciente (Requer autenticação)
+**PUT** `/pacientes/{id_paciente}`
+```json
+{
+  "nome": "Ana Maria Souza",
+  "celular": "(11) 91234-5678"
+}
+```
+
+---
+
+### 4. Consultas
+
+#### Agendar uma consulta (Requer autenticação)
+**POST** `/medicos/consulta`
+```json
+{
+  "medico_id": 1,
+  "paciente_id": 2,
+  "data": "2025-03-15 14:00:00"
+}
+```
+
+---
+
+### 5. Cidades
+
+#### Listar todas as cidades
+**GET** `/cidades`
+
+---
+
+## Segurança e Autenticação
+As rotas protegidas exigem autenticação via token Bearer. O token deve ser enviado no cabeçalho da requisição:
+```
+Authorization: Bearer {TOKEN}
+```
+
+---
+
+
+
