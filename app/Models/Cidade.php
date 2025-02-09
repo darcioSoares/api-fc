@@ -16,6 +16,16 @@ class Cidade extends Model
         'estado',
     ];
 
+    public function getCreatedAtAttribute($value)
+    {
+        return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+   
+    public function getUpdatedAtAttribute($value)
+    {
+        return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+
     public function medicos()
     {
         return $this->hasMany(Medico::class);

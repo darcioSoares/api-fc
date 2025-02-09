@@ -18,6 +18,16 @@ class Paciente extends Model
         'celular',
     ];
 
+    public function getCreatedAtAttribute($value)
+    {
+        return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+   
+    public function getUpdatedAtAttribute($value)
+    {
+        return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+
     public function consultas()
     {
         return $this->hasMany(Consulta::class);
