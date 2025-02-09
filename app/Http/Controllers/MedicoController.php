@@ -5,97 +5,61 @@ namespace App\Http\Controllers;
 use App\Models\Consulta;
 use App\Models\Medico;
 use App\Models\Paciente;
+use App\Services\MedicoService;
 use Illuminate\Http\Request;
 
 class MedicoController extends Controller
 {
-    public function criarMedico(Request $request)
-    { 
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
-            'especialidade' => 'required|string|max:255',
-            'cidade_id' => 'required|exists:cidades,id',
-        ]);
+    protected $medicoService;
 
-        $medico = Medico::create($validated);
+    public function __construct(MedicoService $medicoService)
+    {
+        $this->medicoService = $medicoService;
+    }
+
+    public function criarMedico(Request $request)
+    {
+        $dados = $request->all();
+
+        $resultado = $this->medicoService->criarMedico($dados);
+
+        if (isset($resultado['errors'])) {
+            return response()->json($resultado, 422);
+        }
 
         return response()->json([
             'message' => 'Médico cadastrado com sucesso!',
-            'medico' => $medico
+            'medico' => $resultado
         ], 201);
     }
 
     public function listar(Request $request)
     {
-        $query = Medico::query();
-       
-        if ($request->filled('nome')) {
-            $nome = strtolower($request->query('nome'));
-            
-            $nome = preg_replace('/^(dr|dra)\.?[\s]+/i', '', $nome);
-            
-            $query->whereRaw("LOWER(nome) LIKE ?", ["%{$nome}%"]);
-        }
-       
-        $medicos = $query->orderBy('nome')->get();
+        $nome = $request->query('nome');
+        $medicos = $this->medicoService->listarMedicos($nome);
 
-        return response()->json($medicos,200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($medicos, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function listarPorCidade(Request $request, $id_cidade)
     {
-        $query = Medico::where('cidade_id', $id_cidade);
-        
-        if ($request->filled('nome')) {
-            $nome = strtolower($request->query('nome'));
-            
-            $nome = preg_replace('/^(dr|dra)\.?[\s]+/i', '', $nome);
-                    
-            $query->whereRaw("LOWER(nome) LIKE ?", ["%{$nome}%"]);
-        }
-        
-        $medicos = $query->orderBy('nome')->get();
+        $nome = $request->query('nome');
+        $medicos = $this->medicoService->listarPorCidade($id_cidade, $nome);
 
         return response()->json($medicos, JSON_UNESCAPED_UNICODE);
     }
 
-    public function listarPacientes(Request $request, $id_medico) 
+    public function listarPacientes(Request $request, $id_medico)
     {
-        $medico = Medico::find($id_medico);
-        if (!$medico) {
-            return response()->json(['error' => 'Médico não encontrado'], 404);
-        }
-    
-        $query = Paciente::whereHas('consultas', function ($query) use ($id_medico) {
-            $query->where('medico_id', $id_medico);
-        })->with(['consultas' => function ($query) {
-            $query->select(['id','paciente_id', 'data', 'created_at', 'updated_at','deleted_at']) 
-                  ->orderBy('data', 'asc');
-        }]);
-        
+        $apenasAgendadas = $request->boolean('apenas-agendadas');
+        $nome = $request->query('nome');
 
-        if ($request->boolean('apenas-agendadas')) {
-            $query->whereHas('consultas', function ($query) {
-                $query->where('data', '>', now());
-            });
-        }
+        $pacientes = $this->medicoService->listarPacientes($id_medico, $apenasAgendadas, $nome);
 
-        if ($request->filled('nome')) {
-            $nome = strtolower(trim($request->query('nome')));
-            $nome = preg_replace('/^(dr|dra)\.?[\s]+/i', '', $nome);
-            $query->whereRaw('LOWER(nome) LIKE ?', ["%{$nome}%"]);
+        if ($pacientes->isEmpty()) {
+            return response()->json(['error' => 'Médico não encontrado ou sem pacientes'], 404);
         }
-
-        $pacientes = $query->get()->map(function ($paciente) {
-            $paciente->consultas->each(function ($consulta) {
-                $consulta->makeVisible(['id', 'created_at', 'updated_at'])
-                         ->makeHidden(['paciente_id']);
-            });
-            return $paciente;
-        });
-        
 
         return response()->json($pacientes);
     }
-        
 }

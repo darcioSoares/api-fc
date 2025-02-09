@@ -4,41 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Consulta;
 use App\Models\Medico;
+use App\Services\ConsultaService;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 
 class ConsultaController extends Controller
 {
+    protected $consultaService;
+
+    public function __construct(ConsultaService $consultaService)
+    {
+        $this->consultaService = $consultaService;
+    }
+
     public function agendar(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'medico_id' => 'required|exists:medicos,id',
-            'paciente_id' => 'required|exists:pacientes,id',
-            'data' => 'required|date_format:Y-m-d H:i:s|after:now',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }    
+        $dados = $request->all();
+  
+        $resultado = $this->consultaService->agendarConsulta($dados);
 
-        $consultaExistente = Consulta::where('medico_id', $request->medico_id)
-            ->where('data', $request->data)
-            ->exists();
-    
-        if ($consultaExistente) {
-            return response()->json([
-                'error' => 'O médico já tem uma consulta agendada nesse horário.'
-            ], 409); 
+        if (isset($resultado['errors'])) {
+            return response()->json($resultado, 422);
         }
-    
-        $consulta = Consulta::create([
-            'medico_id' => $request->medico_id,
-            'paciente_id' => $request->paciente_id,
-            'cidade_id' => Medico::find($request->medico_id)->cidade_id,
-            'data' => $request->data,
-        ]);
-    
-        return response()->json($consulta, 201);
-   }
+
+        if (isset($resultado['error'])) {
+            return response()->json($resultado, 409);
+        }
+
+        return response()->json($resultado, 201);
+    }
 }
