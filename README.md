@@ -19,11 +19,25 @@ Essa estrutura torna a API mais escalável, organizada e de fácil manutenção.
 
 As rotas protegidas utilizam autenticação via **token Bearer**.
 
-### Comandos laravel sails 
-./vendor/bin/sail up -d
-./vendor/bin/sail down
+# 🚀 Passo a Passo para Rodar a Aplicação
+
+## 📦 Instalar Dependências
+```sh
+.env-example tranforma no .env já contem todas as variaveis e configuraçoes
+
+composer install
+
 ./vendor/bin/sail build --no-cache
 
+./vendor/bin/sail up -d
+
+docker exec -it api sh
+
+php artisan migrate
+
+php artisan migrate:fresh --seed
+
+./vendor/bin/sail down
 
 ## Endpoints
 
