@@ -31,9 +31,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Usuário registrado com sucesso!'], 201);
     }
 
-    /**
-     * Login do usuário e geração do token JWT
-     */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -45,9 +42,6 @@ class AuthController extends Controller
         return response()->json(['token' => $token]);
     }
 
-    /**
-     * Logout do usuário
-     */
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
@@ -55,9 +49,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logout realizado com sucesso']);
     }
 
-    /**
-     * Obter o usuário autenticado
-     */
     public function usuarioAutenticado()
     {
         return response()->json(JWTAuth::user());
