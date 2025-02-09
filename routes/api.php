@@ -5,7 +5,17 @@ use App\Http\Controllers\CidadeController;
 use App\Http\Controllers\MedicoController;
 use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\AuthController;
 
+Route::post('/register', [AuthController::class, 'registrar']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'usuarioAutenticado']);
+});
+
+//Route::middleware('auth:api')->post('/pacientes/{id_paciente}', [PacienteController::class, 'atualizar']);
 
 Route::get('/medicos/{id_medico}/pacientes', [MedicoController::class, 'listarPacientes']);
 //http://127.0.0.1:8000/api/medicos/2/pacientes?apenas-agendadas=true
