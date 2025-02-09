@@ -9,6 +9,8 @@ class Cidade extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
     protected $fillable = [
         'nome',
         'estado',
