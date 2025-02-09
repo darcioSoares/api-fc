@@ -19,6 +19,12 @@ Essa estrutura torna a API mais escalável, organizada e de fácil manutenção.
 
 As rotas protegidas utilizam autenticação via **token Bearer**.
 
+### Comandos laravel sails 
+./vendor/bin/sail up -d
+./vendor/bin/sail down
+./vendor/bin/sail build --no-cache
+
+
 ## Endpoints
 
 ### 1. Autenticação
