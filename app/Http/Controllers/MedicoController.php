@@ -14,10 +14,9 @@ class MedicoController extends Controller
        
         if ($request->filled('nome')) {
             $nome = strtolower($request->query('nome'));
-
-            // Remover "dr e dra."
-            $nome = preg_replace('/\b(dr\.|dra\.)\s*/i', '', $nome);
-        
+            
+            $nome = preg_replace('/^(dr|dra)\.?[\s]+/i', '', $nome);
+            
             $query->whereRaw("LOWER(nome) LIKE ?", ["%{$nome}%"]);
         }
        
@@ -49,24 +48,20 @@ class MedicoController extends Controller
 
     public function listarPacientes(Request $request, $id_medico)
     {
-        // Verificar se o médico existe
         $medico = Medico::find($id_medico);
         if (!$medico) {
             return response()->json(['error' => 'Médico não encontrado'], 404);
         }
 
-        // Query para buscar as consultas do médico
         $query = Consulta::where('medico_id', $id_medico)
             ->join('pacientes', 'consultas.paciente_id', '=', 'pacientes.id')
             ->select('pacientes.*', 'consultas.data as consulta_data')
             ->orderBy('consultas.data', 'asc');
 
-        // Filtro: Apenas consultas agendadas (não realizadas)
         if ($request->boolean('apenas-agendadas')) {
             $query->where('consultas.data', '>', now());
         }
 
-        // Filtro: Buscar por nome do paciente
         if ($request->filled('nome')) {
             $nome = strtolower($request->query('nome'));
             $query->whereRaw('LOWER(pacientes.nome) LIKE ?', ["%{$nome}%"]);
