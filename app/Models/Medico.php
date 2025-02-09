@@ -17,6 +17,16 @@ class Medico extends Model
         'cidade_id',
     ];
 
+    public function getCreatedAtAttribute($value)
+    {
+        return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+   
+    public function getUpdatedAtAttribute($value)
+    {
+        return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+
     public function cidade()
     {
         return $this->belongsTo(Cidade::class);

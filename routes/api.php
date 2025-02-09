@@ -21,24 +21,22 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::get('/medicos', [MedicoController::class, 'listar']);
-Route::get('/medicos/{id_medico}/pacientes', [MedicoController::class, 'listarPacientes']);
+
+Route::middleware('auth:api')->post('/medicos', [MedicoController::class, 'criarMedico']);
+
+Route::middleware('auth:api')->get('/medicos/{id_medico}/pacientes', [MedicoController::class, 'listarPacientes']);
 
 Route::get('/cidades', [CidadeController::class, 'listar']);
 
 
-//http://127.0.0.1:8000/api/medicos/2/pacientes?apenas-agendadas=true
-
 Route::middleware('auth:api')->post('/medicos/consulta', [ConsultaController::class, 'agendar']);
 
-
-Route::post('/pacientes', [PacienteController::class, 'adicionar']);
-Route::post('/pacientes/{id_paciente}', [PacienteController::class, 'atualizar']);
-
-
+Route::middleware('auth:api')->post('/pacientes', [PacienteController::class, 'adicionar']);
+Route::middleware('auth:api')->put('/pacientes/{id_paciente}', [PacienteController::class, 'atualizar']);
 
 
 Route::get('/cidades/{id_cidade}/medicos', [MedicoController::class, 'listarPorCidade']);
-// http://127.0.0.1:8000/api/cidades/1/medicos?nome=joão
+
 
 
 
