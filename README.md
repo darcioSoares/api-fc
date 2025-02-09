@@ -21,7 +21,7 @@ As rotas protegidas utilizam autenticação via **token Bearer**.
 
 # 🚀 Passo a Passo para Rodar a Aplicação
 
-## 📦 Instalar Dependências e rodar Laravel Sail
+## 📦 Instalar dependências e rodar Laravel Sail
 ```sh
 .env-example  ( tranformar no .env pois já contem todas as variaveis e configuraçoes )
 
@@ -31,12 +31,14 @@ composer install
 
 ./vendor/bin/sail up -d
 
-docker exec -it api-fc sh OU docker exec -it api-fc php artisan migrate --seed
+docker exec -it api-fc php artisan migrate --seed
 
+OU 
+docker exec -it api-fc sh 
 php artisan migrate
-
 php artisan migrate:fresh --seed
 
+Para matar o containers 
 ./vendor/bin/sail down
 
 ## Endpoints
