@@ -21,13 +21,12 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::get('/medicos', [MedicoController::class, 'listar']);
+Route::get('/cidades', [CidadeController::class, 'listar']);
+Route::get('/cidades/{id_cidade}/medicos', [MedicoController::class, 'listarPorCidade']);
 
 Route::middleware('auth:api')->post('/medicos', [MedicoController::class, 'criarMedico']);
 
 Route::middleware('auth:api')->get('/medicos/{id_medico}/pacientes', [MedicoController::class, 'listarPacientes']);
-
-Route::get('/cidades', [CidadeController::class, 'listar']);
-
 
 Route::middleware('auth:api')->post('/medicos/consulta', [ConsultaController::class, 'agendar']);
 
@@ -35,7 +34,7 @@ Route::middleware('auth:api')->post('/pacientes', [PacienteController::class, 'a
 Route::middleware('auth:api')->put('/pacientes/{id_paciente}', [PacienteController::class, 'atualizar']);
 
 
-Route::get('/cidades/{id_cidade}/medicos', [MedicoController::class, 'listarPorCidade']);
+
 
 
 
