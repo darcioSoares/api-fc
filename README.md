@@ -50,7 +50,7 @@ Para matar o containers
 obs seeder já cria o user admin
 
 #### Criar uma conta
-**POST** `/register`
+**POST** `/api/register`
 ```json
 {
   "nome": "João Silva",
@@ -59,7 +59,7 @@ obs seeder já cria o user admin
 }
 ```
 #### Fazer login
-**POST** `/login`
+**POST** `/api/login`
 ```json
 {
   "email": "joao@email.com",
@@ -68,20 +68,20 @@ obs seeder já cria o user admin
 ```
 
 #### Fazer logout (Requer autenticação)
-**POST** `/logout`
+**POST** `/api/logout`
 
 #### Obter usuário autenticado (Requer autenticação)
-**GET** `/user`
+**GET** `/api/user`
 
 ---
 
 ### 2. Médicos
 
 #### Listar todos os médicos
-**GET** `/medicos`
+**GET** `/api/medicos`
 
 #### Criar um médico (Requer autenticação)
-**POST** `/medicos`
+**POST** `/api/medicos`
 ```json
 {
   "nome": "Dr. Carlos Souza",
@@ -91,17 +91,17 @@ obs seeder já cria o user admin
 ```
 
 #### Listar médicos por cidade
-**GET** `/cidades/{id_cidade}/medicos`
+**GET** `/api/cidades/{id_cidade}/medicos`
 
 #### Listar pacientes de um médico (Requer autenticação)
-**GET** `/medicos/{id_medico}/pacientes`
+**GET** `/api/medicos/{id_medico}/pacientes`
 
 ---
 
 ### 3. Pacientes
 
 #### Adicionar um paciente (Requer autenticação)
-**POST** `/pacientes`
+**POST** `/api/pacientes`
 ```json
 {
   "nome": "Ana Maria",
@@ -111,7 +111,7 @@ obs seeder já cria o user admin
 ```
 
 #### Atualizar dados de um paciente (Requer autenticação)
-**PUT** `/pacientes/{id_paciente}`
+**PUT** `/api/pacientes/{id_paciente}`
 ```json
 {
   "nome": "Ana Maria Souza",
@@ -124,7 +124,7 @@ obs seeder já cria o user admin
 ### 4. Consultas
 
 #### Agendar uma consulta (Requer autenticação)
-**POST** `/medicos/consulta`
+**POST** `/api/medicos/consulta`
 ```json
 {
   "medico_id": 1,
@@ -138,7 +138,7 @@ obs seeder já cria o user admin
 ### 5. Cidades
 
 #### Listar todas as cidades
-**GET** `/cidades`
+**GET** `/api/cidades`
 
 ---
 
