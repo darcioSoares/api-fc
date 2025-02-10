@@ -23,7 +23,7 @@ As rotas protegidas utilizam autenticação via **token Bearer**.
 
 ## 📦 Instalar dependências e rodar Laravel Sail
 ```sh
-.env-example  ( tranformar no .env pois já contem todas as variaveis e configuraçoes )
+.env-example  ( transformar no .env pois já contem todas as variaveis e configuraçoes )
 
 composer install
 
@@ -41,9 +41,13 @@ php artisan migrate:fresh --seed
 Para matar o containers 
 ./vendor/bin/sail down
 
+```
+
 ## Endpoints
 
 ### 1. Autenticação
+
+obs seeder já cria o user admin
 
 #### Criar uma conta
 **POST** `/register`
@@ -54,7 +58,6 @@ Para matar o containers
   "password": "123456"
 }
 ```
-
 #### Fazer login
 **POST** `/login`
 ```json
