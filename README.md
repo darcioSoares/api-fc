@@ -1,4 +1,4 @@
-# API Teste Facil Consulta
+# API Consultas Medicas
 
 ## Descrição
 Esta API permite gerenciar consultas, médicos, pacientes e cidades de forma eficiente e segura.
